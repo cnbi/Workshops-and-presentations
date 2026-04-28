@@ -2,7 +2,7 @@
 title: "exercises_SSD"
 author: "Camila Barragan and Ulrich Losener"
 date: "`r Sys.Date()`"
-output: html_document
+output: pdf_document
 editor_options: 
   markdown: 
     wrap: 80
@@ -26,7 +26,12 @@ library(bain)   # Bayes factor
 ## Installing the Package
 
 ```{r}
+# Older version of devtools
 install_github("ulrichlosener/BayesSSD")
+
+# Latest version of devtools
+pak::pak("ulrichlosener/BayesSSD")
+
 library(BayesSSD)
 ```
 
@@ -37,7 +42,7 @@ library(BayesSSD)
 The sample size determination is designed as two-step process. It is advised to
 first determine the survival function, which defines the expected drop-out
 pattern of participants. This can be done using the Shiny app
-[Attrition](https://losener.shinyapps.io/attrition-survival/​).
+[Attrition](https://losener.shinyapps.io/attrition-survival/).
 
 *Note: Focus only on non-intermittent missingness, that is, drop-out/attrition!*
 
@@ -74,10 +79,10 @@ The second step is to include the attrition function and relevant information
 for the sample size (for the effect sizes and variance-covariance components, you may stick to the defaults for simplicity):
 
 ```{r}
-SSD_longit(attrition="weibull", # survival function to model attrition
-           params=c(0.5, 1),    # omega (proportion of individuals dropping out) and gamma (timing of dropout)
-           m=1000,              # number of simulated datasets per iteration 
-           seed=123)
+SSD_longit(attrition = "weibull", # survival function to model attrition
+           params = c(0.5, 1),    # omega (proportion of individuals dropping out) and gamma (timing of dropout)
+           m = 1000,              # number of simulated datasets per iteration 
+           seed = 123)
 ```
 
 ## Cluster Randomised Trials
@@ -99,7 +104,18 @@ $H_2: \mu_C> \mu_T$
 
 ```{r}
 # Pair 1 
-SSD_crt_null()
+SSD_crt_null(eff_size = 0.2,          # Effect size
+             n1 = 20,                 # Cluster size
+             ndatasets = 100,         # Number of datasets to generate
+             rho = 0.1,               # Intraclass correlation coefficient
+             BF_thresh1 = 3,          # Bayes factor threshold if H1 is true
+             BF_thresh0 = 3,          # Bayes factor threshold if H0 is true
+             eta1 = 0.7,              # Desired power if H1 is true
+             eta0 = 0.7,              # Desired power if H0 is true
+             fixed = "n1",            # The sample size that is fixed
+             b_fract = 2,             # b fraction to run the sensitivity analysis 
+             max = 200,               # Maximum sample size that can be reached
+             batch_size = 50)         # Batch size for fitting the multilevel model
 ```
 
 The output includes a table. The second column contains the number of clusters
@@ -110,7 +126,13 @@ for fraction b (first column).
 
 ```{r}
 # Pair 2
-SSD_crt_inform()
+SSD_crt_inform(eff_size = 0.5,          # Effect size
+               n1 = 20,                 # Cluster size
+               ndatasets = 100,         # Number of datasets to generate
+               rho = 0.1,               # Intraclass correlation coefficient
+               BF_thresh = 3,           # Bayes factor threshold
+               eta = 0.8,               # Desired power
+               fixed = "n1")            # The sample size that is fixed
 ```
 
 The output include the cluster size and number, the number of clusters, and the
@@ -192,7 +214,7 @@ the study.
 
 A new programme involving Health visitor training in the clinical assessment of
 postnatal women is being evaluated. The group of researchers compares the
-effectivity of the new programme with the standard  postnatal care. In the
+effectivity of the new programme with the standard postnatal care. In the
 cluster randomised trial, the researchers will allocate randomly the health
 centres into the intervention and the control conditions.
 
@@ -225,7 +247,6 @@ PubMed](https://pubmed.ncbi.nlm.nih.gov/38499320/)
 and economic evaluation. The PONDER trial \| NIHR Journals
 Library](https://www.journalslibrary.nihr.ac.uk/hta/HTA13300)
 
-## Multivariate Cluster Randomised Trial
 
 # References
 
