@@ -214,3 +214,220 @@ and Behavioral Statistics*, *0*(0).
 Barragan Ibañez CN, Lösener U, Moeteke N, Moerbeek M (2026) Design and analysis
 of behavioral intervention studies: A Bayesian approach. PLoS One 21(2):
 e0342163. https://doi.org/10.1371/journal.pone.0342163
+
+---
+title: "exercises_SSD"
+author: "Camila Barragan and Ulrich Losener"
+date: "`r Sys.Date()`"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 80
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set( cache = FALSE, comment = NA, message = FALSE, warning = FALSE )
+```
+
+## Settings
+
+Required libraries:
+
+```{r}
+library(devtools)   # Installing package
+library(lme4)   # Multilevel model
+library(bain)   # Bayes factor
+
+```
+
+## Installing the Package
+
+```{r}
+devtools::install_github("ulrichlosener/BayesSSD")
+library(BayesSSD)
+```
+
+## Longitudinal Interventions
+
+### Survival function
+
+The sample size determination is designed as two-step process. It is advised to
+first determine the survival function, which defines the expected drop-out
+pattern of participants. This can be done using the Shiny app
+[Attrition](https://losener.shinyapps.io/attrition-survival/​)
+
+#### Additional Exercises
+
+### Sample Size Determination
+
+The second step is to include the attrition function and relevant information
+for the sample size:
+
+```{r}
+SSD_longit()
+```
+
+## Cluster Randomised Trials
+
+For two-arm Cluster Randomised Trial it is important to define beforehand the
+hypotheses of study.
+
+-   Pair 1: Null vs. alternative
+
+$H_0: \mu_C = \mu_T$
+
+$H_1:\mu_C<\mu_T$
+
+-   Pair 2: Informative hypotheses
+
+$H_1:\mu_C<\mu_T$
+
+$H_2: \mu_C> \mu_T$
+
+```{r}
+# Pair 1 
+SSD_crt_null(eff_size = 0.2, n1 = 20, ndatasets = 100, rho = 0.1, BF_thresh1 = 3, BF_thresh0 = 3, eta1 = 0.7, eta0 = 0.7, fixed = "n1", b_fract = 2, max = 200, batch_size = 50)
+```
+
+The output includes a table. The second column contains the number of clusters
+whilst the third column contains the cluster size. The fourth and fifth columns
+contain the empirical power when the null and alternative hypotheses are true,
+respectively. The output includes a sensitivity analysis using different values
+for fraction b (first column).
+
+```{r}
+# Pair 2
+SSD_crt_inform(eff_size = 0.5, n1 = 20, ndatasets = 100, rho = 0.1, BF_thresh = 3, eta = 0.8, fixed = "n1")
+```
+
+The output include the hypotheses under consideration, the cluster size and
+number, the number of clusters, and the empirical power.
+
+In addition to the package, the Shiny app [SSD for CRT with Bayes
+factor](https://utrecht-university.shinyapps.io/BayesSamplSizeDet-CRT/) can be
+used to determine the sample size for a set of common values of effect size,
+ICC, number of clusters, and cluster sizes.
+
+### Additional exercises
+
+**Situation 1 A**
+
+A research teams is designing a study to evaluate the effectiveness of a smoking
+prevention programme for children combining the current intervention at school
+with an additional intervention at home. The researchers decided to assign
+randomly schools to one of the intervention conditions
+
+-   School-Only (control): Prevention curriculum delivered during school hours.
+
+-    School + Home: The standard curriculum plus an integrated home-based family
+    component.
+
+According to previous literature about similar interventions, the researchers
+expect a Cohen’s d of 0.2 and an ICC of 0.1. A total of 60 schools have agreed
+to participate in the study. The researchers decide to aim for a Bayes factor of
+at least 5 to provide an evidence they consider substantial. Given the values
+mentioned, determine the required number of students per school necessary.
+
+**Situation 1 B**
+
+A research teams is designing a study to evaluate which smoking prevention
+programme for children is better. The researchers decided to assign randomly
+schools to one of the intervention conditions
+
+-   School-Only: Prevention curriculum delivered during school hours.
+
+-   School + Home: The standard curriculum plus an integrated home-based family
+    component.
+
+According to previous literature about similar interventions, the researchers
+expect a Cohen’s d of 0.5 and an ICC of 0.025. A total of 60 schools have agreed
+to participate in the study. The researchers decide to aim for a Bayes factor of
+at least 5 to provide an evidence they consider substantial. Given the values
+mentioned, determine the required number of students per school necessary.
+
+**Situation 2 A**
+
+A group of researcher have developed a new programme called FUNBALL to prevent
+injuries among football players. In the study, teams assigned to the
+intervention condition will complete FUNBALL sessions after their usual warm-up,
+while the control condition will maintain their usual training routine.
+
+Based on training data and previous literature, the research group expects an
+ICC of 0.025 and an effect size of 0.8. Preliminary recruitment efforts indicate
+that 40 players per team are willing to participate. Using the Bayesian
+hypothesis testing, the researchers seek a Bayes factor of at least 2. Given
+this information, determine the total number of teams that must be recruited for
+the study.
+
+**Situation 2 B**
+
+A group of researcher have developed a new programme called FUNBALL to prevent
+injuries among football players. To evaluate its efficacy, the researchers have
+designed a cluster randomised trial comparing the FUNBALL program to a standard
+training control. In the study, teams assigned to the FUNBALL condition will
+complete FUNBALL sessions, while the other condition will complete the well
+stablished FIFA 11+ programme.
+
+Based on training data and previous literature, the research group expects an
+ICC of 0.05 and an effect size of 0.5. Preliminary recruitment efforts indicate
+that 5 players per team are willing to participate. Using the Bayesian
+hypothesis testing, the researchers seek a Bayes factor of at least 5. Given
+this information, determine the total number of teams that must be recruited for
+the study.
+
+**Situation 3 A**
+
+A new programme involving Health visitor training in the clinical assessment of
+postnatal women is being evaluated. The group of researchers compares the
+effectivity of the new programme with the standard  postnatal care. In the
+cluster randomised trial, the researchers will allocate randomly the health
+centres into the intervention and the control conditions.
+
+Based on previous clinical trials in maternal mental health, the researchers
+expect an ICC of 0.1 and an effect size (Cohen’s d) of 0.8. Due to the average
+number of mothers at the centres, the cluster size is fixed at 40. The desired
+Bayes factor is at least 3. Considering this information, determine the number
+of clusters required.
+
+**Situation 3 B**
+
+A clinical research team is investigating which psychological framework is more
+effective for treating postnatal depression: a Cognitive Behavioural Approach
+(CBA) or a Person-Centred Approach (PCA). In the cluster randomized trial, the
+health centres are assigned to one of the two approaches.
+
+Based on previous clinical trials in maternal mental health, the researchers
+expect an ICC of 0.1 and an effect size (Cohen’s d) of 0.8. Due to the average
+number of mothers at the centres, the cluster size is fixed at 30. The desired
+Bayes factor is at least 3. Considering this information, determine the number
+of clusters required.
+
+**Based on**:
+
+[Efficacy of a new injury prevention programme (FUNBALL) in young male football
+(soccer) players: a cluster-randomised controlled trial -
+PubMed](https://pubmed.ncbi.nlm.nih.gov/38499320/)
+
+[Psychological interventions for postnatal depression: cluster randomised trial
+and economic evaluation. The PONDER trial \| NIHR Journals
+Library](https://www.journalslibrary.nihr.ac.uk/hta/HTA13300)
+
+## Multivariate Cluster Randomised Trial
+
+The function is not still available in the package. However, the Shiny app
+[Sample Size Determination for Bayesian Hypothesis Testing in Multivariate
+Cluster Randomised Trials](https://cnbi.shinyapps.io/SSD-Multivariate-App/) is
+available for sample size determination for a set of realistic values. The tests
+for multiple outcomes available are: intersection-union test, omnibus test, and
+homogeneity of treatment effects.
+
+# References
+
+Barragan I., C. N. , & Moerbeek, M. (2025). Method for Sample Size Determination
+for Cluster-Randomized Trials Using the Bayes Factor. *Journal of Educational
+and Behavioral Statistics*, *0*(0).
+<https://journals.sagepub.com/doi/10.3102/10769986251362404>
+
+Barragan Ibañez CN, Lösener U, Moeteke N, Moerbeek M (2026) Design and analysis
+of behavioral intervention studies: A Bayesian approach. PLoS One 21(2):
+e0342163. https://doi.org/10.1371/journal.pone.0342163
