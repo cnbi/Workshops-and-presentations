@@ -1,15 +1,15 @@
 ---
 title: "exercises_SSD"
-author: "Camila Barragan and Ulrich Losener"
+author: "Camila Barragan and Ulrich Lösener"
 date: "`r Sys.Date()`"
 output: pdf_document
 editor_options: 
   markdown: 
-    wrap: 80
+    wrap: 90
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set( cache = FALSE, comment = NA, message = FALSE, warning = FALSE )
+knitr::opts_chunk$set( cache = FALSE, comment = NA, message = FALSE, warning = FALSE)
 ```
 
 ## Settings
@@ -26,10 +26,10 @@ library(bain)   # Bayes factor
 ## Installing the Package
 
 ```{r}
-# Older version of devtools
+# For older version of devtools
 install_github("ulrichlosener/BayesSSD")
 
-# Latest version of devtools
+# For latest version of devtools
 pak::pak("ulrichlosener/BayesSSD")
 
 library(BayesSSD)
@@ -76,11 +76,12 @@ A public health research team investigates changes in physical activity among ad
 ### Sample Size Determination
 
 The second step is to include the attrition function and relevant information
-for the sample size (for the effect sizes and variance-covariance components, you may stick to the defaults for simplicity):
+for the sample size (for the effect sizes and variance-covariance components, you may stick to the defaults for simplicity). Note that omega refers to the proportion of individuals dropping out and gamma to the timing of drop-out.
+
 
 ```{r}
 SSD_longit(attrition = "weibull", # survival function to model attrition
-           params = c(0.5, 1),    # omega (proportion of individuals dropping out) and gamma (timing of dropout)
+           params = c(0.5, 1),    # omega and gamma
            m = 1000,              # number of simulated datasets per iteration 
            seed = 123)
 ```
@@ -101,6 +102,7 @@ $H_1:\mu_C<\mu_T$
 $H_1:\mu_C<\mu_T$
 
 $H_2: \mu_C> \mu_T$
+
 
 ```{r}
 # Pair 1 
