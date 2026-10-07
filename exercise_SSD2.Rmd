@@ -50,7 +50,7 @@ pattern of participants. This can be done using the Shiny app
 
 **1. First year students**
 
-A health psychology team investigates how first-year university students adapt to academic stress during their transition into higher education. Participants are recruited during orientation week at a large university and are introduced to a smartphone-based study that tracks stress, mood, and social context in real time. The protocol involves responding to brief surveys five times per day over a four-week period, with reminders delivered at semi-random intervals. While the onboarding sessions emphasize the importance of capturing experiences in the moment, students only fully encounter the pace and intrusiveness of the prompts once their regular class schedules begin and daily routines take shape. The students have their orientation week in week 1 of the study, and their first preliminary exams in the week 4. 
+A health psychology team investigates how first-year university students adapt to academic stress during their transition into higher education. Participants are recruited during orientation week at a large university and are introduced to a smartphone-based study that tracks stress, mood, and social context in real time. The protocol involves responding to brief surveys five times per day over a four-week period, with reminders delivered at semi-random intervals. While the on boarding sessions emphasize the importance of capturing experiences in the moment, students only fully encounter the pace and intrusiveness of the prompts once their regular class schedules begin and daily routines take shape. The students have their orientation week in week 1 of the study, and their first preliminary exams in the week 4. 
 
 
 **2. Employees in a large company**
@@ -203,7 +203,7 @@ injuries among football players. To evaluate its efficacy, the researchers have
 designed a cluster randomised trial comparing the FUNBALL program to a standard
 training control. In the study, teams assigned to the FUNBALL condition will
 complete FUNBALL sessions, while the other condition will complete the well
-stablished FIFA 11+ programme.
+established FIFA 11+ programme.
 
 Based on training data and previous literature, the research group expects an
 ICC of 0.05 and an effect size of 0.5. Preliminary recruitment efforts indicate
@@ -211,6 +211,17 @@ that 5 players per team are willing to participate. Using the Bayesian
 hypothesis testing, the researchers seek a Bayes factor of at least 5. Given
 this information, determine the total number of teams that must be recruited for
 the study.
+
+```{r}
+SSD_crt_inform(eff_size = 0.5,          # Effect size
+               n1 = 5,                 # Cluster size
+               ndatasets = 100,         # Number of datasets to generate
+               rho = 0.05,               # Intraclass correlation coefficient
+               BF_thresh = 5,           # Bayes factor threshold
+               eta = 0.8,               # Desired power
+               fixed = "n1")            # The sample size that is fixed
+```
+
 
 **Situation 3 A**
 
